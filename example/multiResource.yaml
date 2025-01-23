@@ -1,9 +1,20 @@
+Mappings: 
+  AmiRegionMap: 
+    us-east-1: 
+      AMI: "ami-0df8c184d5f6ae949"
+    us-west-1: 
+      AMI: "ami-0118dc74bd8f98b13"
+    eu-central-1: 
+      AMI: "ami-0cdd6d7420844683b"
 Resources:
   MyInstance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
-      ImageId: ami-0df8c184d5f6ae949
+      ImageId: !FindInMap
+        - AmiRegionMap
+        - !Ref AWS::Region
+        - AMI
       Tags:
         - Key: "Name"
           Value: !Join
@@ -12,7 +23,7 @@ Resources:
               - !Ref "AWS::Region"
       SecurityGroups:
         - !Ref exampleSG
-
+        
   exampleSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
